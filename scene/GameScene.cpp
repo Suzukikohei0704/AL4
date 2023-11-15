@@ -10,6 +10,10 @@ GameScene::~GameScene() {
 	// delete player_;
 }
 
+/// <summary>
+/// 111
+/// </summary>
+
 void GameScene::Initialize() {
 
 	dxCommon_ = DirectXCommon::GetInstance();
