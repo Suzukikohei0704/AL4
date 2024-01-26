@@ -1,4 +1,5 @@
-﻿#include "Audio.h"
+﻿#include "Skydome.h"
+#include "Audio.h"
 #include "DirectXCommon.h"
 #include "Input.h"
 #include "Model.h"
@@ -7,38 +8,24 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include <cassert>
-#include <player.h>
 
-void Player::Initialize(Model* model) {
+
+void Skydome::Initialize(Model* model) {
 
 	// NULLポインタチェック
 	assert(model);
 	model_ = model;
-	//textureHandle_ = textureHandle;
+	// textureHandle_ = textureHandle;
 	worldTransform_.Initialize();
 };
 
-void Player::Update() {
+void Skydome::Update() {
 	// 行列を定数バッファに転送
 	worldTransform_.TransferMatrix();
 };
 
-void Player::Draw(ViewProjection& viewProjection) {
+void Skydome::Draw(ViewProjection& viewProjection) {
 
 	// 3Dモデルを描画
 	model_->Draw(worldTransform_, viewProjection);
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-

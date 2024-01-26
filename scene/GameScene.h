@@ -10,6 +10,8 @@
 #include "WorldTransform.h"
 #include <memory>
 #include <player.h>
+#include"Skydome.h"
+#include"Ground.h"
 
 /// <summary>
 /// ゲームシーン
@@ -48,16 +50,21 @@ private: // メンバ変数
 	Audio* audio_ = nullptr;
 
 	// テクスチャハンドル
-	uint32_t textureHandle_ = 0;
+	//uint32_t textureHandle_ = 0;
 
 	// 3Dモデルデータ
 	std::unique_ptr<Model> model_;
+	std::unique_ptr<Model> modelSkydome_;
+	std::unique_ptr<Model> modelGround_;
+
 
 	// ビュープロジェクション
 	ViewProjection viewProjection_;
 
-	// 自キャラ
+	//各クラス
 	std::unique_ptr<Player> player_;
+	std::unique_ptr<Skydome> skydome_;
+	std::unique_ptr<Ground> ground_;
 
 	/// <summary>
 	/// ゲームシーン用

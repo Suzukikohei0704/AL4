@@ -13,7 +13,7 @@
 /// 自キャラ
 /// </summary>
 
-class Player {
+class Skydome {
 public:
 	///< summary>
 	/// 初期化
@@ -41,28 +41,3 @@ private:
 	// テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
