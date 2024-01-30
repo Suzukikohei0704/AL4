@@ -95,6 +95,8 @@ void GameScene::Update() {
 		player_->Update();
 		skydome_->Update();
 		ground_->Update();
+		
+		
 
 		// 追従カメラの更新
 		followCamera_->Update();
@@ -110,7 +112,8 @@ void GameScene::Update() {
 
 		StartTimer_ -= 1;
 
-		if (StartTimer_ == 0) {
+
+		if (StartTimer_ == 0 ) {
 		
 		sceneMode_ = 1;
 			StartTimer_ = 1000;

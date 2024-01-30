@@ -89,7 +89,7 @@ private: // メンバ変数
 	// ゲームタイマー
 	int gameTimer_ = 0;
 
-	int StartTimer_ = 10;
+	int StartTimer_ = 1000;
 
 
 
