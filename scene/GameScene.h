@@ -75,6 +75,28 @@ private: // メンバ変数
 	std::unique_ptr<Ground> ground_;
 	std::unique_ptr<followCamera> followCamera_;
 
+	int sceneMode_ = 1;
+
+
+	// タイトル(スプライト)
+	//uint32_t textureHandleTitle_ = 0;
+	//Sprite* spriteTitle_ = nullptr;
+
+	// タイトル(エンター)
+	uint32_t textureHandleEnter_ = 0;
+	Sprite* spriteEnter_ = nullptr;
+
+	// ゲームタイマー
+	int gameTimer_ = 0;
+
+	int StartTimer_ = 10;
+
+
+
+	Sprite* fadeSprite_=nullptr;
+	Vector4 fadeColor_ = {1.0f, 1.0f, 1.0f, 1.0f};
+
+
 
 
 

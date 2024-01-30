@@ -34,6 +34,10 @@ void GameScene::Initialize() {
 	modelFighterR_arm_.reset(Model::CreateFromOBJ("float_R_arm"));
 
 
+
+
+
+
 	// ビュープロジェクションの初期化
 	viewProjection_.farZ = 2000.0f;
 	viewProjection_.translation_ = {0.0f, 2.0f, -10.0f};
@@ -67,7 +71,13 @@ void GameScene::Initialize() {
 	followCamera_->SetTarget(&player_->GetWorldTransform());
 
 
+	// タイトル(２Dスプライト)
+	uint32_t fadeTexHandle = TextureManager::Load("title.png");
+	fadeSprite_ = Sprite::Create(fadeTexHandle, {0, 0});
 
+	// エンター(２Dスプライト)
+	textureHandleEnter_ = TextureManager::Load("enter.png");
+	spriteEnter_ = Sprite::Create(textureHandleEnter_, {400, 500});
 
 
 
@@ -76,26 +86,68 @@ void GameScene::Initialize() {
 }
 
 void GameScene::Update() {
-	// 各クラスの更新
-	player_->Update();
-	skydome_->Update();
-	ground_->Update();
+	
+	switch (sceneMode_) { 
+	
+	case 0:
 
+		// 各クラスの更新
+		player_->Update();
+		skydome_->Update();
+		ground_->Update();
 
-	//追従カメラの更新
-	followCamera_->Update();
+		// 追従カメラの更新
+		followCamera_->Update();
 
 		// 追従カメラのビュー行列をゲームシーンのビュープロジェクションにコピー;
-	viewProjection_.matView = followCamera_->GetViewProjection().matView;
+		viewProjection_.matView = followCamera_->GetViewProjection().matView;
 
-	// 追従カメラのプロジェクション行列をゲームシーンのビュープロジェクションにコピー;
-	viewProjection_.matProjection = followCamera_->GetViewProjection().matProjection;
+		// 追従カメラのプロジェクション行列をゲームシーンのビュープロジェクションにコピー;
+		viewProjection_.matProjection = followCamera_->GetViewProjection().matProjection;
 
-	// ゲームシーンのビュープロジェクション行列の転送処理
-	viewProjection_.TransferMatrix();
+		// ゲームシーンのビュープロジェクション行列の転送処理
+		viewProjection_.TransferMatrix();
+
+		StartTimer_ -= 1;
+
+		if (StartTimer_ == 0) {
+		
+		sceneMode_ = 1;
+			StartTimer_ = 1000;
+		fadeColor_.w += 0.005f;
+		fadeSprite_->SetColor(fadeColor_);
+		}
+
+		
+
+		break;
+		
+
+	case 1:
+			  
+		if (input_->TriggerKey(DIK_RETURN)) {
+		sceneMode_ = 0;
+		
+		}
+
+		gameTimer_ += 1;
+
+		fadeColor_.w -= 0.005f;
+		fadeSprite_->SetColor(fadeColor_);
+			break;
+
+	case 2:
+
+		if (input_->TriggerKey(DIK_RETURN)) {
+		sceneMode_ = 1;
+		    }
+				break;
 
 
-
+	}
+	
+	
+	
 
 
 }
@@ -113,6 +165,41 @@ void GameScene::Draw() {
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
 
+
+
+	switch (sceneMode_) {
+
+		case 0:
+		        fadeSprite_->Draw();
+			break;
+
+     case 1:
+		    fadeSprite_->Draw();
+
+
+
+		
+			// エンター表示
+			if (gameTimer_ % 40 >= 20) {
+				spriteEnter_->Draw();
+			}
+
+		    
+
+
+
+
+			
+
+		 break;
+
+    
+	}
+
+
+
+
+
 	// スプライト描画後処理
 	Sprite::PostDraw();
 	// 深度バッファクリア
@@ -127,10 +214,36 @@ void GameScene::Draw() {
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 
-	// 各クラスの描画
-	player_->Draw(viewProjection_);
-	skydome_->Draw(viewProjection_);
-	ground_->Draw(viewProjection_);
+	switch (sceneMode_) { 
+	
+	
+	case 0:
+
+		 // 各クラスの描画
+		 player_->Draw(viewProjection_);
+		 skydome_->Draw(viewProjection_);
+		 ground_->Draw(viewProjection_);
+		 break;
+
+		 case 1:
+
+			 break;
+
+
+			 case 2:
+
+				 break;
+
+
+
+
+
+
+
+	}
+
+
+
 
 
 
@@ -142,12 +255,56 @@ void GameScene::Draw() {
 	// 前景スプライト描画前処理
 	Sprite::PreDraw(commandList);
 
+
+	switch (sceneMode_) {
+
+	case 0:
+
+		         break;
+
+	case 1:
+
+		         break;
+
+	case 2:
+
+		         break;
+	}
+
+
+
+
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
+
+	fadeSprite_->Draw();
+
+
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
 
 #pragma endregion
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
