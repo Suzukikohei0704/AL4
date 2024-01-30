@@ -12,6 +12,9 @@
 #include <player.h>
 #include"Skydome.h"
 #include"Ground.h"
+#include "followCamera.h"
+
+
 
 /// <summary>
 /// ゲームシーン
@@ -53,9 +56,14 @@ private: // メンバ変数
 	//uint32_t textureHandle_ = 0;
 
 	// 3Dモデルデータ
-	std::unique_ptr<Model> model_;
+	//std::unique_ptr<Model> model_;
 	std::unique_ptr<Model> modelSkydome_;
 	std::unique_ptr<Model> modelGround_;
+	std::unique_ptr<Model> modelFighterBody_;
+	std::unique_ptr<Model> modelFighterHead_;
+	std::unique_ptr<Model> modelFighterL_arm_;
+	std::unique_ptr<Model> modelFighterR_arm_;
+
 
 
 	// ビュープロジェクション
@@ -65,6 +73,11 @@ private: // メンバ変数
 	std::unique_ptr<Player> player_;
 	std::unique_ptr<Skydome> skydome_;
 	std::unique_ptr<Ground> ground_;
+	std::unique_ptr<followCamera> followCamera_;
+
+
+
+
 
 	/// <summary>
 	/// ゲームシーン用

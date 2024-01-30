@@ -25,18 +25,27 @@ void GameScene::Initialize() {
 
 	// 3Dモデルの生成
 	//model_.reset(Model::Create());
-	model_.reset(Model::CreateFromOBJ("float"));
+	//model_.reset(Model::CreateFromOBJ("float"));
 	modelSkydome_.reset(Model::CreateFromOBJ("skydome"));
 	modelGround_.reset(Model::CreateFromOBJ("ground"));
+	modelFighterBody_.reset(Model::CreateFromOBJ("float_Body"));
+	modelFighterHead_.reset(Model::CreateFromOBJ("float_Head"));
+	modelFighterL_arm_.reset(Model::CreateFromOBJ("float_L_arm"));
+	modelFighterR_arm_.reset(Model::CreateFromOBJ("float_R_arm"));
 
-	// ビュープロジェクション
+
+	// ビュープロジェクションの初期化
 	viewProjection_.farZ = 2000.0f;
 	viewProjection_.translation_ = {0.0f, 2.0f, -10.0f};
 	viewProjection_.Initialize();
 
 	// 自キャラの生成
 	player_ = std::make_unique<Player>();
-	player_->Initialize(model_.get());
+	player_->Initialize(
+	    modelFighterBody_.get(), 
+		modelFighterHead_.get(), 
+		modelFighterL_arm_.get(),
+	    modelFighterR_arm_.get());
 	
 	
 		//スカイドームの生成
@@ -49,6 +58,18 @@ void GameScene::Initialize() {
 	ground_->Initialize(modelGround_.get());
 
 
+	// 追従カメラの生成
+	followCamera_ = std::make_unique<followCamera>();
+	followCamera_->Initialize();
+
+
+	//自キャラのワールドトランスフォームを追従カメラにセット
+	followCamera_->SetTarget(&player_->GetWorldTransform());
+
+
+
+
+
 
 	
 	
@@ -59,6 +80,23 @@ void GameScene::Update() {
 	player_->Update();
 	skydome_->Update();
 	ground_->Update();
+
+
+	//追従カメラの更新
+	followCamera_->Update();
+
+		// 追従カメラのビュー行列をゲームシーンのビュープロジェクションにコピー;
+	viewProjection_.matView = followCamera_->GetViewProjection().matView;
+
+	// 追従カメラのプロジェクション行列をゲームシーンのビュープロジェクションにコピー;
+	viewProjection_.matProjection = followCamera_->GetViewProjection().matProjection;
+
+	// ゲームシーンのビュープロジェクション行列の転送処理
+	viewProjection_.TransferMatrix();
+
+
+
+
 
 }
 
