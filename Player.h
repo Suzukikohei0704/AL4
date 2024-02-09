@@ -3,7 +3,6 @@
 
 #include "Input.h"
 #include "Model.h"
-
 #include "worldTransform.h"
 #include "MathUtilityForText.h"
 

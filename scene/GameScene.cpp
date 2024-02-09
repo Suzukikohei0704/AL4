@@ -32,6 +32,7 @@ void GameScene::Initialize() {
 	modelFighterHead_.reset(Model::CreateFromOBJ("float_Head"));
 	modelFighterL_arm_.reset(Model::CreateFromOBJ("float_L_arm"));
 	modelFighterR_arm_.reset(Model::CreateFromOBJ("float_R_arm"));
+	modelEnemy_.reset(Model::CreateFromOBJ("needle_Body"));
 
 
 	// ビュープロジェクションの初期化
@@ -63,6 +64,11 @@ void GameScene::Initialize() {
 	followCamera_->Initialize();
 
 
+	// 敵の生成
+	enemy_ = std::make_unique<Enemy>();
+	enemy_->Initialize(modelEnemy_.get());
+
+
 	//自キャラのワールドトランスフォームを追従カメラにセット
 	followCamera_->SetTarget(&player_->GetWorldTransform());
 
@@ -80,7 +86,7 @@ void GameScene::Update() {
 	player_->Update();
 	skydome_->Update();
 	ground_->Update();
-
+	enemy_->Update();
 
 	//追従カメラの更新
 	followCamera_->Update();
@@ -131,7 +137,7 @@ void GameScene::Draw() {
 	player_->Draw(viewProjection_);
 	skydome_->Draw(viewProjection_);
 	ground_->Draw(viewProjection_);
-
+	enemy_->Draw(viewProjection_);
 
 
 	// 3Dオブジェクト描画後処理

@@ -13,7 +13,7 @@
 #include"Skydome.h"
 #include"Ground.h"
 #include "followCamera.h"
-
+#include"Enemy.h"
 
 
 /// <summary>
@@ -63,7 +63,7 @@ private: // メンバ変数
 	std::unique_ptr<Model> modelFighterHead_;
 	std::unique_ptr<Model> modelFighterL_arm_;
 	std::unique_ptr<Model> modelFighterR_arm_;
-
+	std::unique_ptr<Model> modelEnemy_;
 
 
 	// ビュープロジェクション
@@ -74,7 +74,7 @@ private: // メンバ変数
 	std::unique_ptr<Skydome> skydome_;
 	std::unique_ptr<Ground> ground_;
 	std::unique_ptr<followCamera> followCamera_;
-
+	std::unique_ptr<Enemy> enemy_;
 
 
 
