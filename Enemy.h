@@ -32,6 +32,15 @@ public:
 
 	void Draw(ViewProjection& viewProjection);
 
+	// 座標の獲得
+	float GetX() { return worldTransform_.matWorld_.m[3][0]; }
+	float GetY() { return worldTransform_.matWorld_.m[3][1]; }
+	float GetZ() { return worldTransform_.matWorld_.m[3][2]; }
+
+	void Hit();
+
+
+
 private:
 	// ワールド変換データ
 	WorldTransform worldTransform_;
@@ -41,4 +50,10 @@ private:
 
 	// テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
+
+	//ジャンプ
+	bool jumpFlag_ = false;
+	float jumpSpeed_ = 0;
+
+
 };

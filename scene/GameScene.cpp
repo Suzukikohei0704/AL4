@@ -72,38 +72,126 @@ void GameScene::Initialize() {
 	//自キャラのワールドトランスフォームを追従カメラにセット
 	followCamera_->SetTarget(&player_->GetWorldTransform());
 
+	
 
-
-
-
+	// 背景
+	textureHandleTitle_ = TextureManager::Load("title.png");
+	spriteTitle_.reset(Sprite::Create(textureHandleTitle_, {0, 0}));
 
 	
+	// タイトルキー
+	textureHandleKey_ = TextureManager::Load("enter.png");
+	spriteKey_.reset(Sprite::Create(textureHandleKey_, {300, 400}));
+
+	//フェード
+	textureHandleBlack_ = TextureManager::Load("black.png");
+	spriteBlack_.reset(Sprite::Create(textureHandleBlack_, {0, 0}));
+
+	// ゲームクリア
+	textureHandleGameClear_ = TextureManager::Load("gameclear.png");
+	spriteGameClear_.reset(Sprite::Create(textureHandleGameClear_, {0, 0}));
+
+	// タイトルの生成
+	title_ = std::make_unique<Title>();
+	title_->Initialize(
+	    spriteTitle_.get(), textureHandleTitle_,
+		spriteKey_.get(), textureHandleKey_);
+
+
+	// ゲームクリアの生成
+	gameClear_ = std::make_unique<GameClear>();
+	gameClear_->Initialize(
+	    spriteGameClear_.get(), textureHandleGameClear_, spriteKey_.get(), textureHandleKey_);
+
+	// フェードの生成
+	fade_ = std::make_unique<Fade>();
+	fade_->Initialize(
+	    spriteBlack_.get(), textureHandleBlack_);
+
+
 	
 }
 
 void GameScene::Update() {
-	// 各クラスの更新
-	player_->Update();
-	skydome_->Update();
-	ground_->Update();
-	enemy_->Update();
+	
+	switch (sceneMode_) {
 
-	//追従カメラの更新
-	followCamera_->Update();
+	case 0:
+
+		// 各クラスの更新
+
+		player_->Update();
+		skydome_->Update();
+		ground_->Update();
+		enemy_->Update();
+
+		// 追従カメラの更新
+		followCamera_->Update();
 
 		// 追従カメラのビュー行列をゲームシーンのビュープロジェクションにコピー;
-	viewProjection_.matView = followCamera_->GetViewProjection().matView;
+		viewProjection_.matView = followCamera_->GetViewProjection().matView;
 
-	// 追従カメラのプロジェクション行列をゲームシーンのビュープロジェクションにコピー;
-	viewProjection_.matProjection = followCamera_->GetViewProjection().matProjection;
+		// 追従カメラのプロジェクション行列をゲームシーンのビュープロジェクションにコピー;
+		viewProjection_.matProjection = followCamera_->GetViewProjection().matProjection;
 
-	// ゲームシーンのビュープロジェクション行列の転送処理
-	viewProjection_.TransferMatrix();
+		// ゲームシーンのビュープロジェクション行列の転送処理
+		viewProjection_.TransferMatrix();
+
+		// 衝突判定
+		if (enemy_->GetY() == 0) {
+
+			float dx = abs(player_->GetX() - enemy_->GetX());
+			float dz = abs(player_->GetZ() - enemy_->GetZ());
+			if (dx < 2 && dz < 2) {
+
+				enemy_->Hit();
+				hitCount_++;
+			}
+		}
+
+		if (hitCount_ >= 10) {
+			fade_->FadeOutStart();
+		}
+
+		if (fade_->IsEnd() == true) {
+		sceneMode_ = 2;
+			fade_->FadeInStart();
+		}
+		break;
+
+		case 1:
+		if (title_->Update() == true) {
+
+			fade_->FadeOutStart();
+		}
+		if (fade_->IsEnd() == true) {
+		
+		        sceneMode_ = 0u;
+			    hitCount_ = 0;
+			    fade_->FadeInStart();
+		}
+		break;
+
+		case 2:
+		if (gameClear_->Update() == true) {
+			    fade_->FadeOutStart();
+			
+		}
+		if (fade_->IsEnd() == true) {
+		
+		sceneMode_ = 1u;
+			    fade_->FadeInStart();
+		
+		}
+
+		break;
 
 
+		
+	}
 
-
-
+	fade_->Update();
+	   
 }
 
 void GameScene::Draw() {
@@ -133,12 +221,18 @@ void GameScene::Draw() {
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 
-	// 各クラスの描画
-	player_->Draw(viewProjection_);
-	skydome_->Draw(viewProjection_);
-	ground_->Draw(viewProjection_);
-	enemy_->Draw(viewProjection_);
+	switch (sceneMode_) {
 
+	case 0:
+
+		// 各クラスの描画
+		player_->Draw(viewProjection_);
+		skydome_->Draw(viewProjection_);
+		ground_->Draw(viewProjection_);
+		enemy_->Draw(viewProjection_);
+
+		break;
+	}
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
@@ -151,6 +245,28 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
+
+	switch (sceneMode_) {
+
+	case 1:
+
+		title_->Draw();
+
+		
+		break;
+
+
+
+		case 2:
+
+		gameClear_->Draw();
+
+		break;
+	}
+
+fade_->Draw();
+
+
 
 	// スプライト描画後処理
 	Sprite::PostDraw();

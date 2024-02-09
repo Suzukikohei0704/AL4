@@ -14,6 +14,13 @@
 #include"Ground.h"
 #include "followCamera.h"
 #include"Enemy.h"
+#include"Title.h"
+#include"GameClear.h"
+#include"Fade.h"
+
+
+
+
 
 
 /// <summary>
@@ -75,8 +82,39 @@ private: // メンバ変数
 	std::unique_ptr<Ground> ground_;
 	std::unique_ptr<followCamera> followCamera_;
 	std::unique_ptr<Enemy> enemy_;
+	std::unique_ptr<Title> title_;
+	std::unique_ptr<GameClear> gameClear_;
+	std::unique_ptr<Fade> fade_;
 
 
+
+
+
+	// タイトル
+	uint32_t textureHandleTitle_ = 0u;
+	std::unique_ptr<Sprite> spriteTitle_;
+
+	//ゲームクリア
+	uint32_t textureHandleGameClear_ = 0u;
+	std::unique_ptr<Sprite> spriteGameClear_;
+	
+
+	// フェード
+	uint32_t textureHandleBlack_ = 0u;
+	std::unique_ptr<Sprite> spriteBlack_;
+
+
+	// エンター
+	uint32_t textureHandleKey_ = 0u;
+	std::unique_ptr<Sprite> spriteKey_;
+
+
+
+
+	// シーンモード（０：ゲームプレイ、１：タイトル、２：ゲームクリア）
+	uint32_t sceneMode_ = 1u;
+
+	uint32_t hitCount_ = 0;
 
 
 	/// <summary>
